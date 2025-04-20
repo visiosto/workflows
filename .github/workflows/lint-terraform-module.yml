@@ -1,0 +1,47 @@
+name: Lint Terraform module
+
+on:
+  workflow_call:
+    inputs:
+      terraform-version:
+        description: The version of Terraform to set up.
+        default: latest
+        required: false
+        type: string
+      tflint-version:
+        description: The version of TFLint to set up.
+        default: latest
+        required: false
+        type: string
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the source code
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+
+      - name: Set up TFLint
+        uses: terraform-linters/setup-tflint@v4.1.1
+        with:
+          tflint_version: ${{ inputs.tflint-version }}
+
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Check formatting
+        run: terraform fmt -check -diff
+
+      - name: Validate Terraform
+        run: terraform validate
+
+      - name: Initialize TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint -f compact
