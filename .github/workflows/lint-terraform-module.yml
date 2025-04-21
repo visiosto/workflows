@@ -13,6 +13,10 @@ on:
         default: latest
         required: false
         type: string
+    secrets:
+      token:
+        description: A personal access token to use for GitHub authentication.
+        required: false
 
 jobs:
   lint:
@@ -30,6 +34,12 @@ jobs:
         uses: terraform-linters/setup-tflint@v4.1.1
         with:
           tflint_version: ${{ inputs.tflint-version }}
+
+      - name: Set up GitHub authentication
+        if: ${{ secrets.token != '' }}
+        run: |
+          echo "${{ secrets.token }}" | gh auth login --with-token
+          gh auth status
 
       - name: Initialize Terraform
         run: terraform init
