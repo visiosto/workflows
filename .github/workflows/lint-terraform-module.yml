@@ -40,7 +40,7 @@ jobs:
       - name: Set up GitHub authentication
         if: ${{ env.access_token != '' }}
         run: |
-          gh auth login --with-token < "${access_token}"
+          echo "${access_token}" | gh auth login --with-token
           gh auth setup-git
           gh auth status
 
