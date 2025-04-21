@@ -14,13 +14,15 @@ on:
         required: false
         type: string
     secrets:
-      token:
+      access-token:
         description: A personal access token to use for GitHub authentication.
         required: false
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    env:
+      access_token: ${{ secrets.access-token }}
     steps:
       - name: Clone the source code
         uses: actions/checkout@v4.2.2
@@ -36,9 +38,9 @@ jobs:
           tflint_version: ${{ inputs.tflint-version }}
 
       - name: Set up GitHub authentication
-        if: ${{ secrets.token != '' }}
+        if: ${{ env.access_token != '' }}
         run: |
-          echo "${{ secrets.token }}" | gh auth login --with-token
+          echo "${{ secrets.access-token }}" | gh auth login --with-token
           gh auth status
 
       - name: Initialize Terraform
