@@ -40,7 +40,9 @@ jobs:
       - name: Set up GitHub authentication
         if: ${{ env.access_token != '' }}
         run: |
-          echo "${{ secrets.access-token }}" | gh auth login --with-token
+          git config --global credential.helper store
+          gh auth login --with-token < $access_token
+          gh auth setup-git
           gh auth status
 
       - name: Initialize Terraform
