@@ -33,7 +33,7 @@ jobs:
           terraform_version: ${{ inputs.terraform-version }}
 
       - name: Set up TFLint
-        uses: terraform-linters/setup-tflint@v5.0.0
+        uses: terraform-linters/setup-tflint@v6.2.0
         with:
           tflint_version: ${{ inputs.tflint-version }}
 
